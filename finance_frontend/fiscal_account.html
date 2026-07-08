@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shows the account page, with all of the accounts.">
+    <meta name="author" content="Simon Taunima">
+    <title>Fiscal Focus - Account Page</title>
+    <link rel="stylesheet" href="fiscal_focus.css">
+    <script src="fiscal_focus.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Fiscal Focus</h1>
+        <nav>
+            <ul>
+                <li><a href="fiscal_home.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div id="account-detail">
+            <h2 id="account-name"></h2>
+            <!-- The account that is being viewed. -->
+        </div>
+        <section id="goals-container">
+            <h2>Goals</h2>
+            <!-- The Goals would appear here for each account. -->
+        </section>
+        <section id="recent-transactions">
+            <h2>Recent Transactions:</h2>
+            <!-- Recent transactions of the account. -->
+        </section>
+        <section id="spending-chart">
+            <h2>Spending Chart</h2>
+            <canvas id="spending-chart-canvas"></canvas>
+            <!-- Spending chart of the account rendered here. -->
+        </section>
+    </main>
+</body>
+</html>

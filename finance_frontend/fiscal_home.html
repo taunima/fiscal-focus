@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A personal finance tracker project for my portfolio.">
+    <meta name="author" content="Simon Taunima">
+    <title>Fiscal Focus - Home Page</title>
+    <link rel="stylesheet" href="fiscal_focus.css">
+    <script src="fiscal_focus.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Fiscal Focus</h1>
+        <nav>
+            <ul>
+                <li><a href="fiscal_home.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>My Accounts</h2>
+        <div id="accounts-container">
+            <!-- This is for the different accounts of the user. -->
+        </div>
+        <section id="spending-chart">
+            <h2>Total Spending</h2>
+            <!-- The chart rendered for the total spending across all accounts. -->
+            <canvas id="spending-chart-canvas"></canvas>
+        </section>
+    </main>
+</body>
+</html>
