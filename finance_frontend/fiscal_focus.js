@@ -254,7 +254,7 @@ function addTransaction() {
             })
         }).then(r => r.json()),
         fetch('http://127.0.0.1:5000/update_balance', {
-            method: 'POST',
+            method: 'PUT',
             headers: {'Content-type': 'application/json'},
             body: JSON.stringify({
                 account_id: parseInt(accountId),
