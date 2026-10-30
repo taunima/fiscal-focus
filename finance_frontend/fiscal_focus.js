@@ -26,72 +26,25 @@ function getAccount() {
 
 // This function is making the pie chart to show what the user is spending money on.
 function getChart() {
-    // This is used to grab the fetch calls so that it can be used within the chart with the transactions being labled and organized into categories of the spending chart.
-    Promise.all([
-        fetch('http://127.0.0.1:5000/get_transactions').then(r => r.json()),
-        fetch('http://127.0.0.1:5000/get_categories').then(r => r.json())
-    ])
-    // The 'then' uses both transactions and categories to call them throughout the rest of the function so that it can be used accurately.
-    .then(([transactions, categories]) => {
-        // This is the variable for the spending by each category.
-        const spendingByCategory = {}
-        // This is to grab the transactions for each category so that it can be organized and be accurate in where it is spent in each category.
-        transactions.forEach(transaction => {
-            const categoryId = transaction.categories_id
-            if (spendingByCategory[categoryId]) {
-                spendingByCategory[categoryId] += transaction.amount
-            } else {
-                spendingByCategory[categoryId] = transaction.amount
-            }
-        })
-
-        // Now it is labeling each category as each transaction is organized into each category.
-        const labels = categories.map(category => {
-            return spendingByCategory[category.id] ? category.category_name : null
-        }).filter(label => label !== null)
-
-        // Then it is being filtered and mapped as each transaction is labeled and organized from the previous function.
-        const chartData = categories
-            .filter(category => spendingByCategory[category.id])
-            .map(category => spendingByCategory[category.id])
-
-        // This is the const for the chart that will show the amount of spending.
+    fetch('http://127.0.0.1:5000/spending_by_category')
+    .then(response => response.json())
+    .then(rows => {
+        const labels = rows.map(row => row.category_name)
+        const chartData = rows.map(row => row.total_spent)
+        const palette = ['#2B2118', '#CE8D66', '#228CDB', '#BA324F', '#801A86', '#2A7F62']
         const ctx = document.getElementById('spending-chart-canvas').getContext('2d')
-
-        // This is to connect each of the labels of the spending chart to a specific color.
-        const CATEGORY_COLORS = {}
-        function buildCategoryColors(categories) {
-            const palette = [
-                '#2B2118', '#CE8D66', '#228CDB', '#BA324F', '#801A86', '#2A7F62'
-            ]
-            categories.forEach((category, index) => {
-                CATEGORY_COLORS[category.id] = palette[index % palette.length]
-            })
-        }
-        buildCategoryColors(categories)
-
-        // This will be the chart that will show everything from the spending of each category as each transaction is organized into each one. It is given the labels with the accurate data with each color representing the categories. 
+        
+        // The chart is created and each color is assoicated with each spending category so that the chart can be organized using the variables above. Each label connected to each color on the palette and the total amount spent is shown across all of the accounts.
         new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
                     data: chartData,
-                    backgroundColor: categories
-                    // This is filtering and mapping each of the categories with each color. The options block is to give a background color for the colors so that it looks more professional.
-                    .filter(category => spendingByCategory[category.id])
-                    .map(category => CATEGORY_COLORS[category.id])
+                    backgroundColor: rows.map(row => palette[(row.id - 1) % palette.length])
                 }]
             },
-            options: {
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#FFFFFF'
-                        }
-                    }
-                }
-            }
+            options: {plugins: {legend: {labels: {color: '#FFFFFF'}}}}
         })
     })
 }
@@ -187,6 +140,7 @@ function getAccountChart() {
         const spendingByCategory = {}
         accountTransactions.forEach(transaction => {
             const categoryId = transaction.categories_id
+            if (transaction.transaction_type.toLowerCase() !== 'withdrawal') return
             if (spendingByCategory[categoryId]) {
                 spendingByCategory[categoryId] += transaction.amount
             } else {

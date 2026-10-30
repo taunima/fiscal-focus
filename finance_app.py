@@ -134,10 +134,10 @@ def update_balance():
     connection = sqlite3.connect(os.path.join(BASE_DIR, 'finance_db', 'finance_tracker.db'))
     cursor = connection.cursor()
     # This if statement is to clarify of what will happen if you are depositing money or withdrawling money as well. It will be updating the balance as each transaction is done.
-    if transaction_type == "desposit":
-        cursor.execute("UPDATE account SET balance = balance + ? WHERE = ?", (amount, account_id))
+    if transaction_type == "deposit":
+        cursor.execute("UPDATE account SET balance = balance + ? WHERE id = ?", (amount, account_id))
     elif transaction_type == "withdrawal":
-        cursor.execute("UPDATE account SET balance = balance - ? WHERE = ?", (amount, account_id))
+        cursor.execute("UPDATE account SET balance = balance - ? WHERE id = ?", (amount, account_id))
     connection.commit()
     connection.close()
 
@@ -169,6 +169,29 @@ def get_categories():
     connection.close()
 
     return jsonify(categories)
+
+# This route is for the pie chart in showing the spending of each category across all accounts
+@app.route('/spending_by_category', methods=['GET'])
+def spending_by_category():
+    connection = sqlite3.connect(os.path.join(BASE_DIR, 'finance_db', 'finance_tracker.db'))
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    # In the cursor.execute we are grabbing from the selected table of transactions and joining it together with the categories table. Then it is only adding to the spending chart with withdrawals from the accounts.
+    cursor.execute("""
+        SELECT categories.id, categories.category_name, 
+            COUNT(transactions.id) AS num_transactions,
+            SUM(transactions.amount) AS total_spent,
+            AVG(transactions.amount) AS avg_spend
+        FROM transactions
+        JOIN categories ON transactions.categories_id = categories.id
+        WHERE LOWER(transactions.transaction_type) = 'withdrawal'
+        GROUP BY categories.id, categories.category_name
+        ORDER BY total_spent DESC
+        """)
+    rows = [dict(row) for row in cursor.fetchall()]
+    connection.close()
+
+    return jsonify(rows)
 
 # This creates the database tables from the schema file if they don't already exist in the file. The routes are defined by @app.route decorators above each of the functions.
 def initialize_db():
