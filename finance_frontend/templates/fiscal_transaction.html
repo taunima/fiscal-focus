@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Transaction Page{% endblock %}
+{% block description %}The page that shows the transactions in the account.{% endblock %}
+{% block page %}transactions{% endblock %}
+
+{% block content %}
+    <div id="account-detail">
+        <div class="section">
+            <h2>{{ account.account_name }} - {{ account.account_type }}: ${{ '%.2f'|format(account.balance) }}</h2>
+            <a href="{{ url_for('account_page', account_id=account.id) }}">Back to Account</a>
+        </div>
+    </div>
+
+    <button onclick="showForm('transaction-form')"> Add Transaction </button>
+
+    <!-- If the last submit had errors, the form stays open and the errors are listed above it. -->
+    <form id="transaction-form" method="POST" action="{{ url_for('transactions_page', account_id=account.id) }}" {% if not errors %}style="display:none"{% endif %} novalidate>
+        {% if errors %}
+        <div class="error-box">
+            <p>Please fix the following:</p>
+            <ul>
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <!-- Each value attribute refills what the user typed, so they don't lose it when there is an error. -->
+        <input type="date" name="date" value="{{ form.get('date', '') }}" required>
+        <input type="text" name="name" placeholder="Name" maxlength="100" value="{{ form.get('name', '') }}" required>
+        <input type="number" name="amount" placeholder="Amount" step="0.01" min="0.01" value="{{ form.get('amount', '') }}" required>
+        <select name="transaction_type" required>
+            <option value="deposit" {% if form.get('transaction_type') == 'deposit' %}selected{% endif %}> Deposit </option>
+            <option value="withdrawal" {% if form.get('transaction_type', 'withdrawal') == 'withdrawal' %}selected{% endif %}> Withdrawal </option>
+        </select>
+        <select name="categories_id" required>
+            <option value="">-- Category --</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}" {% if form.get('categories_id') == category.id|string %}selected{% endif %}>{{ category.category_name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit"> Submit </button>
+    </form>
+
+    <section id="transactions-container">
+        <h2>Transactions:</h2>
+        {% for transaction in transactions %}
+        <div class="section">
+            {{ transaction.date }} {{ transaction.name }} - {{ transaction.transaction_type|capitalize }} ${{ '%.2f'|format(transaction.amount) }}
+            ({{ transaction.category_name or 'No category' }})
+            <button class="delete-btn" onclick="deleteTransactions({{ transaction.id }})">Delete</button>
+        </div>
+        {% else %}
+        <p>No transactions yet.</p>
+        {% endfor %}
+    </section>
+{% endblock %}

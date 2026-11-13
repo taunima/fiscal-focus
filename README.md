@@ -4,7 +4,7 @@ A full stack financial tracking web app that is built with Python, SQLite, and J
 
 ## Stack
 - Backend: Python, Flask
-- Frontend: HTML, CSS, JavaScript
+- Frontend: HTML (Jinja templates rendered by Flask), CSS, JavaScript (Chart.js)
 - Database: SQLite
 
 ## Features
@@ -12,6 +12,7 @@ A full stack financial tracking web app that is built with Python, SQLite, and J
 - Add and delete transactions with automatic updates to the balance of the account.
 - Show what is being spent in categories
 - Add goals to each individual account
+- Server-side error checking on the add-transaction form, with error messages shown on the page
 
 ## Future Improvements
 - Automatic transaction categorization
@@ -26,12 +27,11 @@ A full stack financial tracking web app that is built with Python, SQLite, and J
     ```
     pip install flask flask-cors
     ```
-3. Run the backend:
+3. Run the app:
     ```
     python3 finance_app.py
     ```
-4. Open `finance_frontend/fiscal_home.html` with Live Server in VSCode
-5. Navigate to `http://127.0.0.1:5500` in your browser
+4. Navigate to `http://127.0.0.1:5000` in your browser. Flask builds and serves every page, so Live Server isn't needed.
 
 ## Screenshots
 ![Home page](screenshots/dashboard.png)

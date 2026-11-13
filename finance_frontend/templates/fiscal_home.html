@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Home Page{% endblock %}
+{% block page %}home{% endblock %}
+
+{% block content %}
+    <h2>My Accounts</h2>
+    <div id="accounts-container">
+        <!-- Flask passes in the accounts from the database, and this loop builds one card per account. -->
+        {% for account in accounts %}
+        <div class="card">
+            <a href="{{ url_for('account_page', account_id=account.id) }}">
+                {{ account.account_name }} - {{ account.account_type }}: ${{ '%.2f'|format(account.balance) }}
+            </a>
+        </div>
+        {% else %}
+        <p>No accounts yet.</p>
+        {% endfor %}
+        <div class="section">
+            <h3>Total Balance: ${{ '%.2f'|format(total_balance) }}</h3>
+        </div>
+    </div>
+    <section id="spending-chart">
+        <h2>Total Spending</h2>
+        <!-- The chart is still drawn by JavaScript from the /spending_by_category route. -->
+        <canvas id="spending-chart-canvas"></canvas>
+    </section>
+{% endblock %}

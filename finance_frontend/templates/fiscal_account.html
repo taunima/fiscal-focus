@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Account Page{% endblock %}
+{% block description %}Shows the details, goals, and recent transactions of one account.{% endblock %}
+{% block page %}account{% endblock %}
+
+{% block content %}
+    <div id="account-detail">
+        <div class="section">
+            <h2>{{ account.account_name }} - {{ account.account_type }}: ${{ '%.2f'|format(account.balance) }}</h2>
+            <a href="{{ url_for('transactions_page', account_id=account.id) }}">View All Transactions</a>
+        </div>
+    </div>
+    <section id="goals-container">
+        <h2>Goals</h2>
+        {% for goal in goals %}
+        <div class="section">
+            {{ goal.goal_name }}. Goal Target: ${{ '%.2f'|format(goal.goal_target or 0) }} - Current Amount: ${{ '%.2f'|format(goal.current_amount or 0) }}
+        </div>
+        {% else %}
+        <p>No goals for this account yet.</p>
+        {% endfor %}
+    </section>
+    <section id="recent-transactions">
+        <h2>Recent Transactions:</h2>
+        <!-- The 5 newest transactions by date, sorted in the SQL query. -->
+        {% for transaction in recent_transactions %}
+        <div class="section">
+            {{ transaction.date }} {{ transaction.name }} - {{ transaction.transaction_type|capitalize }} ${{ '%.2f'|format(transaction.amount) }}
+        </div>
+        {% else %}
+        <p>No transactions yet.</p>
+        {% endfor %}
+    </section>
+    <section id="spending-chart">
+        <h2>Spending Chart</h2>
+        <canvas id="spending-chart-canvas"></canvas>
+    </section>
+{% endblock %}

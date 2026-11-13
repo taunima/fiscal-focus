@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block description %}A personal finance tracker project for my portfolio.{% endblock %}">
+    <meta name="author" content="Simon Taunima">
+    <title>Fiscal Focus - {% block title %}{% endblock %}</title>
+    <!-- url_for('static', ...) builds the link to files in the static folder, so Flask serves the CSS and JS along with the page. -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='fiscal_focus.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='fiscal_focus.js') }}" defer></script>
+</head>
+<!-- data-page tells fiscal_focus.js which page it is on, and data-account-id gives it the account being viewed (empty on the home page). -->
+<body data-page="{% block page %}{% endblock %}" data-account-id="{{ account.id if account else '' }}">
+    <!-- This base template holds the parts every page shares. Each page "extends" it and fills in the content block. -->
+    <header>
+        <h1>Fiscal Focus</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home_page') }}">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

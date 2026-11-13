@@ -1,0 +1,17 @@
+# macOS folder settings file
+.DS_Store
+
+# Python cache files created when the app runs
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.venv/
+
+# Secrets (API keys, passwords)
+.env
+
+# SQLite temporary and backup files
+*.db-journal
+*_backup.db

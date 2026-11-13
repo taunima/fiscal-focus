@@ -118,3 +118,16 @@ button:hover {
 .delete-btn:hover {
     background-color: #EF3E36;
 }
+/* The box that lists form errors sent back by Flask. */
+.error-box {
+    background-color: #EF3E36;
+    color: #FFFFFF;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 8px;
+}
+
+.error-box p {
+    margin: 5px 0;
+    font-weight: bold;
+}
